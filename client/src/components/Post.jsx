@@ -64,7 +64,7 @@ const Post = ({post}) => {
       <div className="flex gap-3 mb-3 py-5 w-[15%]">
         <div className="flex flex-col items-center">
          <img
-            src={user?.user?.profilePic} alt='post-image'
+            src={user?.user?.profilePic} alt='postPic'
             className="w-[45px] rounded-full h-[45px] cursor-pointer "
             onClick={clickHandler}
           />
