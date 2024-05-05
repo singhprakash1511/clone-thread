@@ -32,7 +32,7 @@ const UserPage = () => {
     }
 
     getPosts();
-  }, [username,setPost]);
+  }, [username,setPost, dispatch]);
 
   if(!user && loading){
     return (

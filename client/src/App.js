@@ -8,7 +8,6 @@ import  { useEffect }  from "react";
 import { useDispatch, useSelector } from 'react-redux';
 import { setUser } from "./Redux/Slices/userSlice";
 import UpdateProfile from "./pages/UpdateProfile";
-import CreatePost from "./components/CreatePost";
 
 
 function App() {

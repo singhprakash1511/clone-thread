@@ -1,6 +1,5 @@
 import React, { useState } from 'react'
 import Comment from '../components/Comment'
-import Actions from '../components/Actions'
 import {useNavigate} from 'react-router-dom';
 import {useSelector} from 'react-redux';
 import axios from "axios";

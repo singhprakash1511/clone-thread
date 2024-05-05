@@ -70,18 +70,17 @@ const Header = () => {
                           >
                             <Logout setIsOpen={setIsOpen}/>
                           </div>
-                          <a
-                            href="#"
+                          <div
+                            
                             className="block px-4 py-2 text-gray-800 hover:bg-gray-200"
                           >
                             Option 2
-                          </a>
-                          <a
-                            href="#"
+                          </div>
+                          <div
                             className="block px-4 py-2 text-gray-800 hover:bg-gray-200"
                           >
                             Option 3
-                          </a>
+                          </div>
                         </div>
                       </div>
                     )}
