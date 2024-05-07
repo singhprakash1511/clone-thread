@@ -26,7 +26,7 @@ const Post = ({post}) => {
     useEffect(() => {
         const getUser = async () => {
             try {
-                const res = await axios.get('/api/users/profile/' +userId);
+                const res = await axios.get('/api/users/profile/' + userId);
                 const data = res.data;
                 if(data.error){
                     toast.error("error in fetching data");
@@ -98,7 +98,7 @@ const Post = ({post}) => {
         )}
 
         <Actions post={post} size={22}/>
-        <p className='text-[12px]'>{formatDistanceToNow(new Date(post?.createdAt))} ago</p>
+        <p className='text-[12px]'>{formatDistanceToNow(post?.createdAt ? new Date(post.createdAt) : new Date())} ago</p>
       </div>
       </div>
        <hr />

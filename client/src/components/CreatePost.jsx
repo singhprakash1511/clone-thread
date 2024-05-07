@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useRef } from "react";
 import { RxCross2 } from "react-icons/rx";
 import toast from "react-hot-toast";
@@ -13,8 +13,10 @@ const CreatePost = () => {
   const dispatch = useDispatch();
   const user = token.user;
   const [isOpen, setIsOpen] = useState(false);
+  const [imageFile, setImageFile] = useState(null);
   const [imagePreview, setImagePreview] = useState(null);
   const [postText, setPostText] = useState("");
+  const [formData, setFormData] = useState({})
 
   const fileInputRef = useRef(null);
 
@@ -23,23 +25,34 @@ const CreatePost = () => {
     setPostText(inputText);
   };
 
-  
 
   const handleImageChange = (e) => {
     e.preventDefault();
     const file = e.target.files[0];
-    if (file) {
-      // Preview the image
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setImagePreview(reader.result);
-      };
-      reader.readAsDataURL(file);
-    }else{
-        toast.error("Please select an image file");
-        setImagePreview(null)
-    }
+    // if (file) {
+    //   // Preview the image
+    //   const reader = new FileReader();
+    //   reader.onloadend = () => {
+    //     setImagePreview(reader.result);
+    //   };
+    //    reader.readAsDataURL(file);
+    // }else{
+    //     toast.error("Please select an image file");
+    //     setImagePreview(null)
+    // }
+    if(file){
+      setImageFile(file);
+      previewFile(file)
+  }
   };
+
+  const previewFile = (file) => {
+    const reader = new FileReader()
+    reader.readAsDataURL(file)
+    reader.onloadend = () => {
+        setImagePreview(reader.result)
+    }
+}
 
   const clickHandler = () => {
     if (!isOpen) {
@@ -54,7 +67,7 @@ const CreatePost = () => {
       const res = await axios.post("/api/posts/create", {
           postedBy: user._id,
           text: postText,
-          img: imagePreview,  
+          img: imageFile, 
       });
       const data = res.data;
       if (data.error) {
@@ -71,7 +84,13 @@ const CreatePost = () => {
       toast.error("Internal server error");
     }
   };
- 
+
+  useEffect(() => {
+    if(imageFile) {
+      previewFile(imageFile)
+  }
+  }, [imageFile]);
+
   return (
     <div >
       <div
@@ -132,7 +151,7 @@ const CreatePost = () => {
             <img
               src={imagePreview}
               alt="Preview"
-              className="absolute right-[542px] w-[400px] top-[140px] h-[245px]"
+              className="absolute z-50 right-[542px] w-[400px] top-[140px] h-[245px]"
             />
             <span
               className="absolute top-[145px] right-[548px] cursor-pointer"

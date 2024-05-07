@@ -18,6 +18,7 @@ const UpdateProfile = () => {
     const fileInputRef = useRef(null);
 
     const handleFileChange = (e) => {
+        e.preventDefault();
         const file = e.target.files[0]
 
         if(file){
@@ -55,7 +56,7 @@ const UpdateProfile = () => {
 
             const res = await axios.post(`/api/users/update/${userId}`,formDataToSend);
             const data = res.data;
-            console.log(data);
+
             if(data.error){
                 toast.error(data.message)
             }

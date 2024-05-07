@@ -9,12 +9,10 @@ import { useDispatch, useSelector } from 'react-redux';
 import { setUser } from "./Redux/Slices/userSlice";
 import UpdateProfile from "./pages/UpdateProfile";
 
-
 function App() {
   const dispatch = useDispatch();
   const {token} = useSelector( (state) => state.user)
   
-
 
   useEffect(() => {
     if(localStorage.getItem("token")){

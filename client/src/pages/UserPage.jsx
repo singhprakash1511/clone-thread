@@ -51,7 +51,7 @@ const UserPage = () => {
     <div className='flex flex-col gap-[10px] w-[600px] m-auto'>
         <UserHeader user={user}/>
         <div>
-        {fetchingPosts ? (<Spinner />) : posts.length > 0 ? (
+        {fetchingPosts ? (<Spinner />) : posts?.length > 0 ? (
           <div className='mb-8'>
              {posts.map((post) => (
               <Post key={post._id} post={post}/>

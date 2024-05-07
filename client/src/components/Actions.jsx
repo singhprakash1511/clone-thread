@@ -12,7 +12,7 @@ import CommentSection from "../pages/CommentSection";
 const Actions = ({size, post}) => {
   const {token} = useSelector( (state) => state.user);
   const {posts} = useSelector( (state) => state.post);
-  const [isLiked, setIsLiked] = useState(post?.likes.includes(token?.user?._id));
+  const [isLiked, setIsLiked] = useState(post?.likes?.includes(token?.user?._id));
   const dispatch = useDispatch();
   const [isLiking,setIsLiking] = useState(false);
   const navigate = useNavigate();
@@ -87,9 +87,9 @@ const Actions = ({size, post}) => {
       </div>
 
       <div className="flex gap-3 items-center">
-        <p className="text-sm">{post?.likes.length} likes</p>
+        <p className="text-sm">{post?.likes?.length} likes</p>
         <div className="w-[4px] h-1 bg-gray-600 rounded-full"></div>
-        <p className="text-sm">{post?.replies.length} comments</p>
+        <p className="text-sm">{post?.replies?.length} comments</p>
       </div>
       
     </div>

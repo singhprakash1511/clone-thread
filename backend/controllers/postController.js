@@ -3,6 +3,7 @@ const Post = require('../models/postModel');
 const jwt = require('jsonwebtoken')
 const {postUploadOnCloudinary} = require('../utils/cloudinary');
 const { response } = require('express');
+const cloudinary = require("cloudinary").v2;
 
 
 exports.createPost = async (req,res) => {
@@ -12,10 +13,9 @@ exports.createPost = async (req,res) => {
         const user = await User.findById(decoded._id);
         const postedBy = user._id.toString();
         const {text} = req.body;
-       
-
+        
         let img = req.file?.path;
-      
+        console.log(img);
         
         if(!postedBy || !text){
             return res.status(400).json({
@@ -23,9 +23,9 @@ exports.createPost = async (req,res) => {
                 message:"Posted and text fields are required"
             })
         }
-      
-
+        
         const currUser = await User.findById(postedBy);
+        console.log("hello1")
         if(!currUser){
             return res.status(400).json({
                 success:false,
@@ -39,15 +39,16 @@ exports.createPost = async (req,res) => {
                 message:"Unauthorized to create post"
             })
         }
-        
+
+        let postImg;
            if(img){
             const response = await postUploadOnCloudinary(img, "threads") ;
-            
-            return response;
-           }
-        
+            postImg = response.url;
+        }
 
-        const newPost = new Post ({postedBy, text, img:response.url});
+    
+
+        const newPost = new Post ({postedBy, text, img:postImg});
         await newPost.save();
 
         return res.status(201).json({
