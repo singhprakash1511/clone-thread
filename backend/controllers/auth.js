@@ -5,6 +5,7 @@ require("dotenv").config();
 const mongoose = require('mongoose');
 const {uploadOnCloudinary} = require("../utils/cloudinary")
 
+//getUser details 
 exports.getUser = async(req,res) => {
     //fetching user profile either with username or userId
     //query is either username or userId
@@ -39,6 +40,7 @@ exports.getUser = async(req,res) => {
     }
 }
 
+//Signup controllers
 exports.signUp = async (req,res) => {
     try {
         const {name, email, username ,password} =req.body;
@@ -52,7 +54,7 @@ exports.signUp = async (req,res) => {
         }
 
         //check user if already exists
-        const user = await User.findOne({username});
+        const user = await User.findOne({$or:[{email},{username}]});
         if(user){
             return res.status(409).json({
                 success:false,
@@ -60,18 +62,8 @@ exports.signUp = async (req,res) => {
             })
         }
 
-        //check email
-        const existEmail = await User.findOne({email});
-        if(existEmail){
-            return res.status(409).json({
-                success:false,
-                message:"Email already used"
-            })
-        }
-
         //hashing password
-        const hashPassword = await bcrypt.hash(password,10);
-
+        const hashPassword = await bcrypt.hash(password,10);  //10 is the number of round password will encrypted
 
         //creating new user
         const newUser = new User({
@@ -79,21 +71,25 @@ exports.signUp = async (req,res) => {
             profilePic:"",
         });
 
+        //saving new user to database
         await newUser.save();
       
+        //generating jwt token
         if(newUser){
+            //generating token
             const token = jwt.sign({ 
                 _id: newUser._id,
                 name:newUser.name,
                 email:newUser.email,
                 username:newUser.username,
                 bio:newUser.bio,
-                profilePic:newUser.profilePic},process.env.JWT_SECRET,{
+                profilePic:newUser.profilePic},
+                process.env.JWT_SECRET,{
                     expiresIn:"24h"
                 })
 
                 newUser.token = token
-                newUser.password=undefined;
+                newUser.password=undefined; 
                 await newUser.save();
                 //set cookie for token and return success response
                 res.cookie("token",token,{
@@ -120,7 +116,8 @@ exports.signUp = async (req,res) => {
     }
 }
 
-exports.logIn = async (req,res) => {
+//login controllers
+exports.logIn = async (req,res) => { 
     try {
         //get username and password from the request body
         const {username,password} =req.body;
@@ -174,6 +171,7 @@ exports.logIn = async (req,res) => {
     }
 }
 
+//logout
 exports.logout =async (req,res) => {
     try {
         // Clear the token cookie
@@ -193,6 +191,7 @@ exports.logout =async (req,res) => {
     }
 }
 
+//follow and unfollow
 exports.followUnFollow = async (req,res) => {
     const token = req.cookies.token;
     console.log("okay")
@@ -202,8 +201,14 @@ exports.followUnFollow = async (req,res) => {
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
         const user = await User.findById(decoded._id);
         const currentUserId = user._id;
-        const targetUser = User.findById(id);
-        console.log(id);
+        const targetUser = await User.findById(id);
+
+        if(!targetUser || !currentUser){
+            return res.status(400).json({
+                success:false,
+                message:"User not found"
+            })
+        }
     
         if(id === currentUserId.toString()) {
             return res.status(400).json({
@@ -212,13 +217,6 @@ exports.followUnFollow = async (req,res) => {
             })
         }
 
-        if(!id){
-            return res.status(400).json({
-                success:false,
-                message:"User not found"
-            });
-        }
-        
         // Get the current user with populated 'following' array
         const currentUser = await User.findById(currentUserId).populate('following');
         
@@ -232,7 +230,7 @@ exports.followUnFollow = async (req,res) => {
 
             return res.status(200).json({
                 success:true,
-                message:"User unfollowed successfully"
+                message:"User unFollowed successfully"
             })
         }
         else{
@@ -243,7 +241,6 @@ exports.followUnFollow = async (req,res) => {
             return res.status(200).json({
                 success:true,
                 message:"User followed successfully",
-                user,
             })
         }
     } catch (error) {
@@ -254,6 +251,7 @@ exports.followUnFollow = async (req,res) => {
     }
 }
 
+//update user details
 exports.updateUser = async (req,res) =>{
     try {
         const {name, email, username, bio} = req.body;

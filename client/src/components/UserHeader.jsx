@@ -24,9 +24,8 @@ import FollowersPage from "../pages/FollowersPage";
     if(isLoading) {
       setLoading(true);
     }
-    console.log("okay");
     try {
-      const res = await axios.post(`/api/users/follow/${user?.user._id}`);
+      const res = await axios.post(`/api/users/follow/${user?.user?._id}`);
       const data = res.data;
 
       if(data.error){
@@ -36,10 +35,10 @@ import FollowersPage from "../pages/FollowersPage";
 
       if(isFollowing){
         toast.success(data.message);
-        user?.user.followers.pop(currUser._id)
+        user?.user.followers.pop(currUser?._id)
       }else{
         toast.success(data.message);
-        user?.user.followers.push(currUser._id);
+        user?.user.followers.push(currUser?._id);
       }
       setIsFollowing(!isFollowing);
       setLoading(false);

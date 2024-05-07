@@ -14,7 +14,6 @@ const SinUpForm = () => {
 
     const [formData, setFormData] = useState({
         name:"",
-        lastName:"",
         username:"",
         email:"",
         password:""
@@ -64,31 +63,18 @@ const SinUpForm = () => {
 
             <div  className="flex justify-center items-center w-full gap-3 fullName px-[22px]">
                 <label className='w-[50%]'>
-                    <p className="text-[1.4rem] mb-[0.2rem] leading[1.375rem]">First Name<sup className="text-pink-500 font-extrabold">*</sup></p>
+                    <p className="text-[1.4rem] mb-[0.2rem] leading[1.375rem]">Full Name<sup className="text-pink-500 font-extrabold">*</sup></p>
                     <input type="text" 
                     required
                     name='name'
                     value={formData.name}
                     onChange={changeHandler}
-                    placeholder='first name'
+                    placeholder='full name'
                     className="bg-gray-50 text-lg outline-none w-full p-[10px] rounded-[0.5rem]"
                     />
                 </label>
 
-                <label className='w-[50%]'>
-                    <p className="text-[1.4rem] mb-[0.2rem] leading[1.375rem]">Last Name</p>
-                    <input type="text" 
-                    required
-                    name='lastName'
-                    value={formData.lastName}
-                    onChange={changeHandler}
-                    placeholder='last name'
-                    className="bg-gray-50 text-lg outline-none w-full p-[10px] rounded-[0.5rem]"
-                    />
-                </label>
-            </div>
-
-                <label className="w-full px-5">
+                <label className="w-[50%]">
                     <p className="text-[1.4rem] mb-[0.2rem] leading[1.375rem]">Username<sup className="text-pink-500 font-extrabold">*</sup></p>
                     <input type="text" 
                     required
@@ -99,6 +85,8 @@ const SinUpForm = () => {
                     className="bg-gray-50 text-lg outline-none w-full p-[10px] rounded-[0.5rem] "
                     />
                 </label>
+            </div>
+
 
                 <label className="w-full px-5">
                     <p className="text-[1.4rem] mb-[0.2rem] leading[1.375rem]">Email Address<sup className="text-pink-500 font-extrabold">*</sup></p>

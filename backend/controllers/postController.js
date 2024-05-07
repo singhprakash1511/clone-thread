@@ -14,8 +14,7 @@ exports.createPost = async (req,res) => {
         const postedBy = user._id.toString();
         const {text} = req.body;
         
-        let img = req.file?.path;
-        console.log(img);
+        let {img} = req.file?.path;
         
         if(!postedBy || !text){
             return res.status(400).json({

@@ -7,7 +7,7 @@ const AuthPage = () => {
   const auth = useSelector((state) => state.auth);
 
   return (
-    <div className='m-auto w-[70%]  mt-10 mb-10'>
+    <div className='m-auto w-[70%]  mt-7 mb-8'>
         {auth.status === 'login' && (
         <div>
           <h1 className='flex justify-center text-xl font-bold'>Login</h1>

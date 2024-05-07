@@ -1,12 +1,13 @@
 const express = require("express");
 const router = express.Router();
 
-const {signUp,logIn,logout,followUnFollow,updateUser,getUser} = require('../controllers/auth'); 
+const {signUp,logIn,logout,followUnFollow,
+           updateUser,getUser} = require('../controllers/auth'); 
 const {protectRoute} = require('../middlerWare/protectRoute');
 const {upload} =require("../middlerWare/multer.js")
 
 
-router.get('/profile/:query',getUser);
+router.get('/profile/:query',protectRoute,getUser);
 router.post('/signup', signUp);
 router.post('/login', logIn);
 router.post('/logout', logout);

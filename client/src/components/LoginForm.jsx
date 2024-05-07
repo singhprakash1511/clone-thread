@@ -94,7 +94,7 @@ const LoginForm = () => {
         </form>
 
         <div className='flex items-center justify-center text-base font-semibold gap-1'>
-            <p>Don't have a account?</p>
+            <p>Don't have an account?</p>
             <button onClick={clickHandler}  className='text-blue-900 font-bold '>Sign up</button>
         </div>
     </div>
