@@ -16,7 +16,6 @@ const CreatePost = () => {
   const [imageFile, setImageFile] = useState(null);
   const [imagePreview, setImagePreview] = useState(null);
   const [postText, setPostText] = useState("");
-  const [formData, setFormData] = useState({})
 
   const fileInputRef = useRef(null);
 
