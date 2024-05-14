@@ -8,10 +8,8 @@ import { IoCreateOutline } from "react-icons/io5";
 import { setPost } from "../Redux/Slices/postSlices";
 
 const CreatePost = () => {
-  const { token } = useSelector((state) => state.user);
   const {posts} = useSelector((state) => state.post);
   const dispatch = useDispatch();
-  const user = token.user;
   const [isOpen, setIsOpen] = useState(false);
   const [imageFile, setImageFile] = useState(null);
   const [imagePreview, setImagePreview] = useState(null);
@@ -28,17 +26,7 @@ const CreatePost = () => {
   const handleImageChange = (e) => {
     e.preventDefault();
     const file = e.target.files[0];
-    // if (file) {
-    //   // Preview the image
-    //   const reader = new FileReader();
-    //   reader.onloadend = () => {
-    //     setImagePreview(reader.result);
-    //   };
-    //    reader.readAsDataURL(file);
-    // }else{
-    //     toast.error("Please select an image file");
-    //     setImagePreview(null)
-    // }
+
     if(file){
       setImageFile(file);
       previewFile(file)
@@ -64,9 +52,8 @@ const CreatePost = () => {
     e.preventDefault();
     try {
       const res = await axios.post("/api/posts/create", {
-          postedBy: user._id,
           text: postText,
-          img: imageFile, 
+          img: imagePreview || '', 
       });
       const data = res.data;
       if (data.error) {

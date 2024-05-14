@@ -86,6 +86,7 @@ import FollowersPage from "../pages/FollowersPage";
                         `https://api.dicebear.com/5.x/initials/svg?seed=${user?.user.name}`
                       }
                       alt="profile"
+                      loading="lazy"
                       className="w-[90px] rounded-full h-[90px] my-10"
               />
         </div>

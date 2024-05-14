@@ -2,20 +2,20 @@ const User = require('../models/userModel');
 const Post = require('../models/postModel');
 const jwt = require('jsonwebtoken')
 const {postUploadOnCloudinary} = require('../utils/cloudinary');
-const { response } = require('express');
 const cloudinary = require("cloudinary").v2;
 
 
 exports.createPost = async (req,res) => {
     const token = req.cookies.token;
     try {
+        console.log("h1")
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
         const user = await User.findById(decoded._id);
         const postedBy = user._id.toString();
         const {text} = req.body;
         
-        let {img} = req.file?.path;
-        
+        let {img} = req.body
+ 
         if(!postedBy || !text){
             return res.status(400).json({
                 success:false,
@@ -24,7 +24,7 @@ exports.createPost = async (req,res) => {
         }
         
         const currUser = await User.findById(postedBy);
-        console.log("hello1")
+
         if(!currUser){
             return res.status(400).json({
                 success:false,
@@ -39,15 +39,12 @@ exports.createPost = async (req,res) => {
             })
         }
 
-        let postImg;
            if(img){
             const response = await postUploadOnCloudinary(img, "threads") ;
-            postImg = response.url;
+            img = response.url;
         }
-
     
-
-        const newPost = new Post ({postedBy, text, img:postImg});
+        const newPost = new Post ({postedBy, text, img:img});
         await newPost.save();
 
         return res.status(201).json({

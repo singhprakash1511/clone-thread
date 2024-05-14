@@ -8,6 +8,7 @@ import  { useEffect }  from "react";
 import { useDispatch, useSelector } from 'react-redux';
 import { setUser } from "./Redux/Slices/userSlice";
 import UpdateProfile from "./pages/UpdateProfile";
+import ChatPage from "./pages/ChatPage";
 
 function App() {
   const dispatch = useDispatch();
@@ -29,9 +30,10 @@ function App() {
               <Route path="/" element={token ? <HomePage/> : <Navigate to="/auth"/>  } />
               <Route path="/auth" element={!token? <AuthPage /> : <Navigate to="/" /> } />
               <Route path="/update" element={token ? <UpdateProfile/> : <Navigate to="/auth" /> } />
-              <Route path="/profile" element={token ? <UserPage /> : <Navigate to="/auth" />} />
               <Route path="/:username" element={token ? <UserPage /> : <Navigate to="/auth" />} />
               <Route path="/:username/post/:pid" element={<PostPage />}/>
+              <Route path="/chat" element={token ? <ChatPage/> : <Navigate to="/auth" /> }/>
+
         </Routes>
     </div>
   );

@@ -49,6 +49,7 @@ const PostPage = () => {
             <div className="flex justify-between items-center">
                 <div className="flex gap-3 items-center">
                     <img src={user?.user.profilePic} alt="profile" 
+                    loading="lazy"
                     className="w-[70px] rounded-full h-[70px]"
                     />
                     <Link to={"/markzuckerberg/post/1"}><h3 className="text-lg font-medium">{user?.user.username}</h3></Link>

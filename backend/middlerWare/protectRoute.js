@@ -14,11 +14,18 @@ exports.protectRoute = async (req,res,next) => {
             });
         }
 
+		// Verifying the JWT using the secret key stored in environment variables
         const decoded = jwt.verify(token, process.env.JWT_SECRET)
 
-        const user = await User.findById(decoded.userId).select("-password");
+        if (!decoded) {
+            return res.status(401).json({
+              success: false,
+              message: "User not found"
+            });
+          }
+		// Storing the decoded JWT payload in the request object for further use
 
-        req.user = user;
+        req.user = decoded;
 
         next();
     } catch (error) {

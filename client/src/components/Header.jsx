@@ -9,6 +9,7 @@ import { FaRegHeart } from "react-icons/fa6";
 import { useState } from "react";
 import Logout from "./Logout";
 import CreatePost from "./CreatePost";
+import { BsChatDots } from "react-icons/bs";
 
 const Header = () => {
   const {token} = useSelector((state) => state.user);
@@ -25,11 +26,11 @@ const Header = () => {
                <div className="flex items-center justify-between py-5">
                     <div>
                       <Link to='/'>
-                        <FaThreads className="text-[33px] cursor-pointer hover:scale-110"/>
+                        <FaThreads className={` text-[33px] cursor-pointer hover:scale-110 ${active === 'home' ? 'text-black' : 'text-gray-400'}`} onClick={() => setActive('home')}/>
                       </Link>
                     </div>
      
-              <div className="flex  items-center gap-[75px]">
+              <div className="flex  items-center gap-[88px]">
                     <div>
                       <Link to={'/'}>
                           <GoHomeFill className={`text-[30px] ${active === 'home' ? 'text-black' : 'text-gray-400'}`} onClick={() => setActive('home')}/>
@@ -53,10 +54,22 @@ const Header = () => {
                     </div>
 
                     <div>
-                      <Link to={`/${token?.user?.username}`}>
+                    <Link to={'/chat'}>
+                          <BsChatDots className={`text-[30px] ${active === 'chat' ? 'text-black' : 'text-gray-400'}`} onClick={() => setActive('chat')}/>
+                      </Link>
+                    </div>
+
+                    {token && (
+                      <div>
+                      <Link to={`/${token.user?.username}`}>
                           <BsPerson className={`text-[30px] ${active === 'profile' ? 'text-black' : 'text-gray-400'}`} onClick={() => setActive('profile')}/>
                       </Link>
                     </div>
+
+                    
+                    )
+
+                    }
               </div>
 
              <div>

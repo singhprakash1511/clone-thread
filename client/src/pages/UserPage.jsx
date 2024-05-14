@@ -27,7 +27,6 @@ const UserPage = () => {
         setFetchingPosts(false);
       } catch (error) {
         toast.error(error.message)
-        setPost([ ]);
       }
     }
 

@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import  axios  from 'axios'
+import { useNavigate } from 'react-router-dom'
 import { useDispatch, useSelector } from "react-redux"
 import toast from 'react-hot-toast'
 import { useRef } from 'react'
@@ -8,9 +9,9 @@ import { setUser } from '../Redux/Slices/userSlice'
 
 const UpdateProfile = () => {
     const {token} = useSelector((state) => state.user)
+    const navigate = useNavigate();
     const dispatch = useDispatch();
     const userId = token?.user?._id || token?.newUser?._id;
-
     const [loading,setLoading] = useState(false);
     const [imageFile, setImageFile] = useState(null);
     const [previewSource, setPreviewSource] = useState(null);
@@ -47,21 +48,17 @@ const UpdateProfile = () => {
         if(loading) return;
         setLoading(true)
         try {
-            const formDataToSend ={
-                name: formData.name,
-                username: formData.username,
-                email: formData.email,
-                bio: formData.bio
-            }
-
-            const res = await axios.post(`/api/users/update/${userId}`,formDataToSend);
+        
+            const res = await axios.post(`/api/users/update/${userId}`,{...formData, profilePic:previewSource || ""});
             const data = res.data;
 
             if(data.error){
                 toast.error(data.message)
             }
             toast.success(data.message);
-            dispatch(setUser({...data.user}));
+            dispatch(setUser(data.user));
+            localStorage.setItem("token", JSON.stringify(data));
+            navigate(`/${token.user.username}`)
             setLoading(false)
         } catch (error) {
             console.log(error)
@@ -74,16 +71,18 @@ const UpdateProfile = () => {
             previewFile(imageFile)
         }
       },[imageFile])
+
   return (
-    <div className='flex items-start  justify-center flex-col gap-3 w-[40%]  px-2 m-auto mt-10 rounded-lg bg-gray-200'>
+    <div className='flex items-start  justify-center flex-col gap-3 w-[40%] px-2 m-auto mt-10 rounded-lg bg-gray-200'>
         <form className='w-[90%] m-auto flex items-center justify-center flex-col gap-4'>
         <h1 className='py-3 px-5 text-3xl font-bold'>Edit Profile</h1>
         <div className='flex w-[90%] m-auto items-center justify-center gap-5 px-5'>
             <div className='w-[35%] rounded-full'>
-            <img src={token?.user?.profilePic || previewSource} alt="profile" 
+            <img src={previewSource || token?.user?.profilePic || token?.newUser?.profilePic} alt="profile" 
                     className="w-[90px]  rounded-full h-[90px]"/>
             </div>
-            <button onClick={ () => fileInputRef.current.click()} className='bg-gray-300 w-[65%] py-1 font-medium rounded-md'>Change Photo</button>
+            <button onClick={ (e) =>{e.preventDefault();  
+                fileInputRef.current.click()}} className='bg-gray-300 w-[65%] py-1 font-medium rounded-md'>Change Photo</button>
             <input type="file"
             ref={fileInputRef}
             className='hidden' onChange={handleFileChange}
@@ -130,7 +129,7 @@ const UpdateProfile = () => {
             </label>
 
             <div className='my-4 m-auto w-[90%] flex gap-2 '>
-            <button className='bg-red-500 w-[50%] py-1 font-medium rounded-md'>Cancel</button>
+            <button className='bg-red-500 w-[50%] py-1 font-medium rounded-md' onClick={(e) => {e.preventDefault(); navigate(`/${token.user.username}`)}}>Cancel</button>
             <button onClick={submitProfileForm} className='w-[50%] py-1 rounded-md font-medium  bg-green-400'>Update</button>
             </div>
         </form>

@@ -65,6 +65,7 @@ const Post = ({post}) => {
         <div className="flex flex-col items-center">
          <img
             src={user?.user?.profilePic} alt='postPic'
+            loading="lazy"
             className="w-[45px] rounded-full h-[45px] cursor-pointer "
             onClick={clickHandler}
           />

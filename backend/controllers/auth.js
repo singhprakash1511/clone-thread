@@ -1,6 +1,7 @@
 const User = require('../models/userModel');
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+const cloudinary = require("cloudinary").v2;
 require("dotenv").config();
 const mongoose = require('mongoose');
 const {uploadOnCloudinary} = require("../utils/cloudinary")
@@ -72,7 +73,7 @@ exports.signUp = async (req,res) => {
         });
 
         //saving new user to database
-        await newUser.save();
+        await newUser.save().select("-password");
       
         //generating jwt token
         if(newUser){
@@ -88,8 +89,8 @@ exports.signUp = async (req,res) => {
                     expiresIn:"24h"
                 })
 
-                newUser.token = token
-                newUser.password=undefined; 
+                newUser.token = token;
+                newUser.password=null; 
                 await newUser.save();
                 //set cookie for token and return success response
                 res.cookie("token",token,{
@@ -145,7 +146,7 @@ exports.logIn = async (req,res) => {
       
                 //save token to user document in database
                 user.token = token;
-                user.password=undefined
+                user.password=null;
 
                 //set cookie for token and return success response
                 res.cookie("token",token,{
@@ -255,7 +256,7 @@ exports.followUnFollow = async (req,res) => {
 exports.updateUser = async (req,res) =>{
     try {
         const {name, email, username, bio} = req.body;
-        let profilePic = req.file?.path;
+        let {profilePic} = req.body;
         const userId = req.params.id;
         
         let user = await User.findById(userId);
@@ -282,18 +283,22 @@ exports.updateUser = async (req,res) =>{
         }
 
         if(profilePic){
+            if (user.profilePic) {
+				await cloudinary.uploader.destroy(user.profilePic.split("/").pop().split(".")[0]);
+			}
             const uploadedResponse = await uploadOnCloudinary(profilePic);
             profilePic = uploadedResponse.url;
-
             user.profilePic = profilePic || user.profilePic;
         }
             
         user = await user.save();
 
+        
+
         return res.status(200).json({
             success:true,
             message:"Updated successfully",
-            user : user
+            user,
         })
     } catch (error) {
         return res.status(500).json({

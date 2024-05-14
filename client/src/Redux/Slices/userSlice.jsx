@@ -10,11 +10,11 @@ const initialState = {
     name:'user',
     initialState:initialState,
     reducers:{
-        setUser(state, value) {
-            state.setUser = value.payload;
+        setUser(state, action) {
+            state.setUser = action.payload;
           },
-          setToken(state,value){
-            state.token = value.payload
+          setToken(state,action){
+            state.token = action.payload
           }
     }
   })

@@ -4,9 +4,9 @@ require("dotenv").config();
 const PORT=process.env.PORT || 5000;
 const database = require("./config/configDB");
 const cookieParser = require('cookie-parser');
-const userRoutes = require("./routes/userRoutes")
+const userRoutes = require("./routes/userRoutes");
 const postRoutes = require("./routes/postRoutes");
-
+const messageRoutes = require("./routes/messageRoutes");
 
 
 //connection to the database
@@ -20,8 +20,9 @@ app.use(express.static("public"))
 
 
 //Routes
-app.use('/api/users', userRoutes)
-app.use('/api/posts', postRoutes)
+app.use('/api/users', userRoutes);
+app.use('/api/posts', postRoutes);
+app.use('/api/message', messageRoutes);
 
 app.listen(PORT, () => {
     console.log(`Server Started at ${PORT}`);
