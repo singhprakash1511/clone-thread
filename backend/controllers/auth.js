@@ -195,7 +195,6 @@ exports.logout =async (req,res) => {
 //follow and unfollow
 exports.followUnFollow = async (req,res) => {
     const token = req.cookies.token;
-    console.log("okay")
 
     try {
         const { id } = req.params;

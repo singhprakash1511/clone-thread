@@ -1,13 +1,14 @@
 import axios from 'axios';
 import React, { useState } from 'react'
 import toast from 'react-hot-toast';
-import { useSelector, useDispatch } from 'react-redux';
+import { useSelector, useDispatch} from 'react-redux';
 import { setConversations } from '../Redux/Slices/messageSlice';
 
 const MessageInput = ({setMessages}) => {
     const [messageText, setMessageText] = useState('');
-    const selectedConversations = useSelector((state) => state.selectedConversations);
     const dispatch = useDispatch();
+    const selectedConversations = useSelector((state) => state.selectedConversations);
+    const {conversations} = useSelector((state) => state.conversations)
 
     const handlerSendMessage = async (e) => {
         e.preventDefault();
@@ -19,30 +20,26 @@ const MessageInput = ({setMessages}) => {
                 recipientId: selectedConversations.userId
             })
             const data = res.data;
-            console.log(data);
             if(data.error){
                 toast.error(data.message);
             }
             setMessages((messages) => [...messages, data]);
+            const updatedConversations = conversations.map(conversation => {
+              if (conversation._id === selectedConversations.conversationId) {
+                  return {
+                      ...conversation,
+                      lastMessage: {
+                          text: messageText,
+                          sender: data.sender,
+                      }
+                  };
+              }
+              return conversation;
+          });
 
-            // dispatch(setConversations(prevConvs => {
-            //   console.log("Previous Conversations:", prevConvs); // Log prevConvs to see its value
-            //   const updatedConversations = prevConvs.map(conversation => {
-            //     if(conversation._Id === selectedConversations.conversationId){
-            //       return {
-            //         ...conversation,
-            //         lastMessage:{
-            //           text:messageText,
-            //           sender:data.sender,
-            //         }
-            //       }
-            //     }
-            //     return conversation;
-            //   })
-            //   return updatedConversations;
-            // }))
-            
-            setMessageText('');
+          dispatch(setConversations(updatedConversations));
+
+          setMessageText('');
         } catch (error) {
             toast.error("Internal server error")
         }
@@ -53,7 +50,7 @@ const MessageInput = ({setMessages}) => {
        <input
        type='text'
        value={messageText}
-       onChange={(e) => setMessageText(e.target.value)}
+       onChange={(e) =>{ e.preventDefault(); setMessageText(e.target.value)}}
         placeholder="Type your message..."
         className='w-[95%] outline-none'
       />

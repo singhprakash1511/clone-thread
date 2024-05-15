@@ -4,23 +4,21 @@ const initialState = {
     conversationId: '',
     userId: '',
     username: '',
-    profilePic: ''
+    profilePic: '',
+    mock:false
 }
 
 export const selectedConversationsSlice = createSlice({
     name:"selectedConversations",
     initialState:initialState,
     reducers:{
-        setSelectedConversations: (state,action) => {
-            const { conversationId, userId, username, profilePic } = action.payload;
-            
-            return {
-                ...state,
-                conversationId: conversationId,
-                userId: userId,
-                username: username,
-                profilePic: profilePic
-            };
+        setSelectedConversations: (state, action) => {
+            const { mock, conversationId, userId, username, profilePic } = action.payload;
+            state.mock = mock; // Update mock property
+            state.conversationId = conversationId;
+            state.userId = userId;
+            state.username = username;
+            state.profilePic = profilePic;
         }
     }
 })
